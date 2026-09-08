@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Data files - StatsBomb data has its own licensing/attribution terms, and processed outputs are large
+data/

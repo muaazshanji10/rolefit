@@ -1,45 +1,96 @@
 # Question Bank
 
-## Week 1
+Answer these out loud, from memory, no notes, during the daily N1/N3 drill block.
+If an answer comes out as recognition rather than explanation, leave it in rotation.
 
-### List vs Dict
-Q: Explain the difference between a list and a dict and when you'd use each.
-A: A list is when something defined is attributed to a bunch of values through []. A dictionary is when something defined is attributed to key and value pairs through {}. In general a list is useful when that something defined is either a key or a value whereas a dictionary is for when hat something has both. ##a list holds values you access by position; a dict holds values you access by a named key.
+---
 
-### Top 3 by key (function from blank)
-Q: Write a function that takes a list of dicts and returns the top 3 by a given key, from a blank file, no help.
-A:
+## Week 1 — Python foundations
 
-### JSON event counting (Week 1 check)
-Q: From a blank file, write a function that opens a StatsBomb JSON match file and returns a count of each event type. No AI, no notes.
-A:
+- From a blank file, write a function that opens a StatsBomb JSON match file and returns a count of each event type.
 
-## Week 2
+## Week 2 — pandas, SQL joins
 
-### Top 3 players by minutes (SQL window function)
-Q: Write, without hesitating, a query finding the top 3 players by minutes per team.
-A:
+- Explain `groupby().transform()` vs `groupby().agg()` and give a case where you need `transform`.
+- Explain list vs dict and when you'd use each.
+- Explain `loc` vs `iloc`.
+- From blank: load a match, aggregate events per player with `groupby`, merge in the lineup to get minutes, and plot the top 10 — unaided.
 
-### PARTITION BY vs ORDER BY
-Q: State whether PARTITION BY comes before ORDER BY inside OVER(), without thinking.
-A:
+## Week 3 — SQL window functions
 
-### LEFT JOIN row count
-Q: Explain why a LEFT JOIN can increase your row count.
-A:
+- Write, from memory in under 3 minutes, a window-function query returning each team's top 3 players by minutes. If you hesitate on syntax, drill it again.
+- Explain the difference between `RANK`, `DENSE_RANK`, and `ROW_NUMBER`.
+- Explain what `PARTITION BY` does differently from `GROUP BY`.
+- Why can't you filter on a window function result using `WHERE` in the same query it's defined in? (Execution order: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY.)
+- Explain cohort retention vs churn, conceptually.
+- What does `COUNT(DISTINCT player)` do differently from plain `COUNT(player)`?
 
-### loc vs iloc
-Q: What's the difference between .loc and .iloc, and when would they give different results?
-A: .loc/.iloc are both about selecting rows within a single DataFrame, nothing to do with aligning two separate tables. Recall the actual distinction from Day 6: .loc[] selects by row label (whatever the index actually says, e.g. label 2), .iloc[] selects by positional order (the 3rd row, regardless of what its label says). They diverge specifically when a DataFrame's index has been reordered or filtered so that labels no longer match positions (like your sort_values() example)
+---
 
-### transform vs agg
-Q: Explain groupby().transform() vs groupby().agg() and give a case where you need transform.
-A: groupby allows grouping when there is a subgroup of something within a column. when we apply something to the groupby like sum or mean then it gives a value for that specific group. transform then gives a value for each row of that subgroup whereas agg gives a value for the subgriup in general not each individual row. 
+## Module A — Python foundations
+- Write a function that takes a list of dicts and returns the top 3 by a given key, from a blank file, no help.
+- Explain the difference between a list and a dict and when you'd use each.
 
-### Chained assignment
-Q: Explain why chained assignment is dangerous in pandas.
-A:
+## Module B — SQL
+- Write, without hesitating, a query finding the top 3 players by minutes per team.
+- State whether `PARTITION BY` comes before `ORDER BY` inside `OVER()` without thinking.
+- Explain why a `LEFT JOIN` can increase your row count.
 
-### Week 2 check (full task)
-Q: From blank, load a match, aggregate events per player with groupby, merge in the lineup to get minutes, and plot the top 10. Unaided.
-A:
+## Module C — NumPy, pandas, visualisation
+- Explain `groupby().transform()` vs `groupby().agg()` and give a case where you need `transform`.
+- Explain why chained assignment is dangerous.
+
+## Module D — Statistics and inference
+- Explain a p-value to a non-statistician in two sentences without saying "probability the null is true."
+- State the assumptions of linear regression.
+- Explain why a player with 3 goals from 2 shots is not a good finisher.
+
+## Module E — Core ML: regression and classification
+- Derive the logistic regression gradient.
+- Explain why cross-entropy and not MSE for classification.
+- Given AUC 0.85 but terrible calibration, explain what that means and when it matters.
+
+## Module F — Trees, ensembles, interpretability
+- How does a tree choose a split?
+- Bagging vs boosting — what is each correcting for?
+- Why is impurity importance misleading with correlated features? (Directly relevant: football stats are heavily correlated.)
+
+## Module G — Unsupervised learning and similarity
+- Why must you scale before k-means and before PCA?
+- What does PC1 actually represent?
+- When is cosine better than Euclidean?
+
+## Module H — Bayesian methods and uncertainty
+- Explain shrinkage to a football scout in plain English.
+- Why does a Bayesian approach help when you have 200 minutes of data on a player?
+- What's the difference between a credible and a confidence interval?
+
+## Module I — Neural networks
+- Walk through backprop for a 2-layer network on a whiteboard.
+- What is vanishing gradient?
+- Why would you choose LightGBM over a neural net for a 5,000-row tabular problem?
+
+## Module J — NLP, LLMs and agentic systems
+- How do you stop an LLM returning malformed JSON?
+- How would you evaluate whether an LLM's output is any good?
+- What makes something an agent rather than a single API call?
+
+## Module K — Engineering and delivery
+- Why does your pipeline have tests?
+- What happens if someone clones your repo — can they reproduce your results, and how do you know?
+
+## Module L — Cloud and big data literacy
+- When would you reach for Spark instead of pandas?
+- What's model drift and how would you detect it?
+- Explain the difference between a data lake and a warehouse to a non-technical client.
+
+## Module M — Communication and consulting skills
+(No standalone Checks listed — covered via M3/M4 deliverables: exec summary, 5-min presentation.)
+
+---
+
+## Project-specific (from today's sessions)
+
+- Why does the flat events table use `match_id` as a hardcoded literal for now, and what will need to change when scaling to multiple matches?
+- Explain what `os.path.expanduser`, `os.makedirs`, and `.write_parquet` each do in the P1 save step.
+- Why is Parquet preferred over CSV for this project?
