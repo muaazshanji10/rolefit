@@ -31,22 +31,28 @@ orders of magnitude (e.g. one player showed over 1,000,000 total minutes). Fixed
 pre-aggregating events to one row per player-per-match (shots, passes counted per
 match) via a CTE before joining to player_minutes, restoring a 1-to-1 join.
 
-## Day 16 - Minutes threshold: methodology, not yet finalised
+## Day 16 - Minutes threshold: 900 minutes
 
 Considered picking a round-number threshold (e.g. 900 min, about 10 matches, a common
 convention) but wanted evidence from the actual dataset rather than an arbitrary
-cutoff. Approach: bucket players by total_minutes, compute STDDEV(shots_per_90)
-per bucket. Expectation (per the law of large numbers): spread should be inflated
-at low minutes by sampling noise, then decline and flatten once minutes are high
-enough that noise is no longer the dominant contributor to spread. The flattening
-point (elbow) is the evidence-based threshold.
+cutoff. Bucketed players by total_minutes and computed STDDEV(shots_per_90) per
+bucket, expecting spread to be inflated at low minutes by sampling noise, then
+decline and flatten once noise stops dominating (per the law of large numbers).
+
+Result: STDDEV(shots_per_90) was <500: 1.67, 500-899: 0.88, 900-1499: 0.96,
+1500-2499: 0.96, 2500+: 1.06. Spread drops sharply between <500 and 500-899,
+then flattens from 500-899 onward. Chose 900 minutes as the threshold: a clean,
+slightly conservative cutoff comfortably inside the stable range, rather than
+exactly at the flattening point (which starts nearer 500).
 
 Caveat acknowledged: this method assumes genuine talent variance is roughly
 constant across minutes buckets. That assumption may not fully hold, since minutes
 played correlates with player quality (fringe or rotation players get less time for
-reasons connected to ability, not just chance). A more rigorous treatment of the
-small-sample problem comes via Bayesian shrinkage (Week 7, H4), which this
-threshold decision is a rough interim proxy for.
+reasons connected to ability, not just chance). The slight uptick at 2500+ (1.06,
+above the 900-2499 range) may reflect real variance among elite players rather
+than the method breaking down. A more rigorous treatment of the small-sample
+problem comes via Bayesian shrinkage (Week 7, H4), which this threshold decision
+is a rough interim proxy for.
 
 Bucket counts (total_minutes): under 500: 563 players, 500-899: 264, 900-1499: 363,
 1500-2499: 566, 2500+: 429.

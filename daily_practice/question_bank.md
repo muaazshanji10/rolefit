@@ -94,3 +94,21 @@ If an answer comes out as recognition rather than explanation, leave it in rotat
 - Why does the flat events table use `match_id` as a hardcoded literal for now, and what will need to change when scaling to multiple matches?
 - Explain what `os.path.expanduser`, `os.makedirs`, and `.write_parquet` each do in the P1 save step.
 - Why is Parquet preferred over CSV for this project?
+
+## Day 15-16
+
+- Why does a Poisson model make more sense than a binomial model for "goals
+  scored by a team in a match"?
+- What is the difference between the Law of Large Numbers and the Central
+  Limit Theorem?
+- Why does a single match's shot-count distribution not need to be normal for
+  CLT to justify a normal-shaped confidence interval around a season average?
+- Why is a LEFT JOIN necessary rather than an INNER JOIN when joining
+  player_minutes to an aggregated events table, and what happens to a player
+  with no matching events row under each join type?
+- Why does percentile rank stay reliable on a right-skewed stat (like shots
+  per 90) while z-score can become distorted, and what specifically causes
+  the distortion?
+- What is the practical difference between a raw total stat and a per-90
+  normalised stat, and why does per-90 alone not fully solve the small-sample
+  problem?
