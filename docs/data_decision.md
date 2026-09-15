@@ -12,3 +12,41 @@
 - Dataset is from 2015/16, so no current transfer relevance - mitigated by using it as a backward-looking case study rather than a live recruitment tool.
 
 **Event schema confirmed present:** Pass (length, angle, height, end location, body part, recipient, through_ball/cross/cut_back/switch/assist qualifiers), Shot (xG, end location, technique, body part, freeze frame), Carry (start/end location), under_pressure and counterpress flags on ~20% of events, play_pattern context, possession chain IDs.
+
+## Day 15 - Player join key: player_id over player_name
+
+Original prototype (Days 12-13) keyed events and minutes-played dicts on player.name.
+Switched to player.id before scaling to the full 1,517-match dataset, because name
+strings risk collisions/inconsistent unicode across ~2,176 players spanning four
+leagues. player.id is StatsBomb's dedicated unique identifier for exactly this reason.
+Kept player_name as a descriptive column alongside player_id for readability.
+
+## Day 15 - Gold aggregation join bug
+
+First attempt joined player_minutes (one row per player-per-match) directly to
+events (one row per individual event) on player_id + match_id. Because events
+has many rows per player per match, this produced a many-to-one join that duplicated
+each player's minutes_played once per matching event, inflating summed totals by
+orders of magnitude (e.g. one player showed over 1,000,000 total minutes). Fixed by
+pre-aggregating events to one row per player-per-match (shots, passes counted per
+match) via a CTE before joining to player_minutes, restoring a 1-to-1 join.
+
+## Day 16 - Minutes threshold: methodology, not yet finalised
+
+Considered picking a round-number threshold (e.g. 900 min, about 10 matches, a common
+convention) but wanted evidence from the actual dataset rather than an arbitrary
+cutoff. Approach: bucket players by total_minutes, compute STDDEV(shots_per_90)
+per bucket. Expectation (per the law of large numbers): spread should be inflated
+at low minutes by sampling noise, then decline and flatten once minutes are high
+enough that noise is no longer the dominant contributor to spread. The flattening
+point (elbow) is the evidence-based threshold.
+
+Caveat acknowledged: this method assumes genuine talent variance is roughly
+constant across minutes buckets. That assumption may not fully hold, since minutes
+played correlates with player quality (fringe or rotation players get less time for
+reasons connected to ability, not just chance). A more rigorous treatment of the
+small-sample problem comes via Bayesian shrinkage (Week 7, H4), which this
+threshold decision is a rough interim proxy for.
+
+Bucket counts (total_minutes): under 500: 563 players, 500-899: 264, 900-1499: 363,
+1500-2499: 566, 2500+: 429.
